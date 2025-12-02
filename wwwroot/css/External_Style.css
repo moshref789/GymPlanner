@@ -1,0 +1,122 @@
+nav.top-nav {
+    background-color: #f0f0f0;
+    border-radius: 15px;
+    height: 75px;
+}
+
+    nav.top-nav ul {
+        display: flex;
+        align-items: center;
+        list-style: none;
+        /* Removes the dots */
+    }
+
+.right-nav {
+    margin-left: auto;
+}
+
+nav img,
+nav a {
+    color: black;
+    margin-right: 20px !important;
+    text-decoration: none;
+}
+
+.log-sign {
+    background-color: #007BFF;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+}
+
+nav.menu ul {
+    display: none;
+    position: absolute;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav.menu:hover ul {
+    display: block;
+}
+
+nav.menu ul li button {
+    padding: 10px 15px;
+}
+
+    nav.menu ul li button:hover {
+        background-color: lightblue;
+    }
+
+
+body.dark-mode .top-nav,
+body.dark-mode .box,
+body.dark-mode .shadow-box,
+body.dark-mode .menu {
+    background-color: #333;
+    color: white;
+}
+
+/* Gym Footer Styling */
+.gym-footer {
+    background: #222;
+    color: #ccc;
+    text-align: center;
+    padding: 25px;
+    margin-top: 50px;
+    border-top: 1px solid #444;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+}
+
+    .gym-footer a {
+        color: #886bb9;
+        font-weight: bold;
+        text-decoration: none;
+    }
+
+        .gym-footer a:hover {
+            text-decoration: underline;
+        }
+
+.footer-container {
+    max-width: 900px;
+    margin: auto;
+}
+
+.gym-footer p {
+    margin: 5px 0;
+}
+
+/* Fix footer float issues */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa;
+}
+
+h1 {
+    font-family: "Poppins", Arial, sans-serif;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin-top: 20px;
+}
+
+h2 {
+    font-family: "Poppins", Arial, sans-serif;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+p {
+    font-family: "Inter", Arial, sans-serif;
+    font-weight: 300;
+    line-height: 1.6;
+}
+
+a {
+    color: #886bb9;
+    text-decoration: none;
+    font-family: "Poppins", Arial, sans-serif;
+}

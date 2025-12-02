@@ -1,51 +1,97 @@
-﻿<!DOCTYPE html>
+﻿@* Views/Shared/_Layout.cshtml *@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - GymPlanner</title>
-    <script type="importmap"></script>
+
+    <!--
+        Bootstrap + ستايل المشروع الأساسي -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/GymPlanner.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/FavBookWebApp.styles.css" asp-append-version="true" />
+
+
+    <!-- ستايل مشروع الجيم -->
+    <link rel="stylesheet" href="~/css/External_Style.css" asp-append-version="true" />
+
+    @RenderSection("Styles", required: false)
 </head>
-<body>
+<body id="top">
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">GymPlanner</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+        <nav class="top-nav">
+            <ul>
+                <!-- اللوقو -->
+                <li>
+                    <a asp-controller="Home" asp-action="About">
+                        <img id="mainImg"
+                             src="~/images/Minimalist_app_logo.png"
+                             width="75" height="75" />
+                    </a>
+                </li>
+
+                <!-- الروابط الرئيسية -->
+                <li><a class="shadow-box" asp-controller="Home" asp-action="Index">Home</a></li>
+                <li><a class="shadow-box" asp-controller="Programs" asp-action="Index">My Programs</a></li>
+                <li><a class="shadow-box" asp-controller="Trainer" asp-action="Index">Trainer</a></li>
+                <li><a class="shadow-box" asp-controller="Home" asp-action="Privacy">Privacy</a></li>
+                <li><a class="shadow-box" asp-controller="Home" asp-action="About">About Us</a></li>
+
+                <!-- قائمة تغيير الثيم -->
+                <nav class="menu">
+                    Theme
+                    <ul>
+                        <li><button id="lightBtn" onclick="activateLightMode()">Light Mode</button></li>
+                        <li><button id="darkBtn">Dark Mode</button></li>
                     </ul>
-                    <partial name="_LoginPartial" />
-                </div>
-            </div>
+                </nav>
+
+                <!-- روابط الدخول والتسجيل -->
+                <li class="right-nav">
+                    <a class="log-sign" asp-area="Identity" asp-page="/Account/Login">login</a>
+                </li>
+                <li>
+                    <a class="log-sign" asp-area="Identity" asp-page="/Account/Register">register</a>
+                </li>
+            </ul>
         </nav>
     </header>
-    <div class="container">
+
+    <div class="container mt-4">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - GymPlanner - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <footer class="gym-footer">
+        <div class="footer-container">
+            <p>© 2025 Gym Planner Project — All rights reserved</p>
+            <p>
+                <a asp-controller="Home" asp-action="About">About Us</a> |
+                <a asp-controller="Home" asp-action="Privacy">Privacy</a> |
+                <a asp-controller="Programs" asp-action="Index">Programs</a>
+            </p>
         </div>
     </footer>
+
+
+    <!-- سكربتات الأساس -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+
+    <!-- سكربت ثيم مشروعك (نفس اللي كنت حاطه في home.html) -->
+    <script src="~/js/theme.js"></script>
+    <script>
+        // عشان تعوض body onload="traditional()"
+        window.addEventListener("load", function () {
+            if (typeof traditional === "function") {
+                traditional();
+            }
+        });
+    </script>
+
+    @RenderSection("Scripts", required: false)
 </body>
 </html>

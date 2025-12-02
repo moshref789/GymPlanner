@@ -1,8 +1,112 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
+}
+@section Styles {
+    <style>
+        .box {
+            background: #f0f0f0;
+            padding: 10px;
+            margin: 0px 100px 50px 100px;
+            border-radius: 20px;
+        }
+
+        img {
+            cursor: pointer;
+        }
+
+        .welcome-div {
+            text-align: center;
+            padding: 50px;
+        }
+    </style>
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="welcome-div">
+    <h1>Welcome to Gym Program Planner</h1>
+
+    <p>
+        This homepage is the starting point after login.<br />
+        Use the navigation above to manage your workout programs,
+        read privacy information,<br /> access the trainer page, or
+        <a style="color: #886bb9;" href="#dynamicLink">
+            watch a youtube video to find the best exercises
+        </a>.
+    </p>
 </div>
+
+<div class="box">
+    <h2>Next Step</h2>
+    <p style="text-shadow: 1px 1px 2px rgb(70, 70, 67);">
+        Go to <strong>My Programs</strong> to view your workout tables
+        and program details.
+    </p>
+
+    <p>You can click the picture in the top of the page to know <strong>About Us</strong>.</p>
+</div>
+
+<br />
+
+<div class="box">
+    <h2>Exercise Videos</h2>
+    <p>Select an exercise from the dropdown menu to view a related workout video.</p>
+
+    <p>
+        <label>
+            Choose Exercise:
+            <select id="siteSelect" onchange="updateLink()">
+                <option value="Back">Back</option>
+                <option value="Chest">Chest</option>
+                <option value="Leg">Leg</option>
+            </select>
+        </label>
+    </p>
+
+    <div style="text-align: center;">
+        <img id="dynamicImage" src="~/images/Backmuscle.png" width="300" height="300" alt="Back muscle" />
+        <p style="font-size: 20px;">
+            <a style="color: #886bb9;" id="dynamicLink" href="https://www.youtube.com/watch?v=jLvqKgW-_G8" target="_blank">
+                Video for Back Exercises
+            </a>
+        </p>
+    </div>
+</div>
+
+<div class="box">
+    <h2>Change Logo Image</h2>
+    <p>Click on an image to set it as the main logo.</p>
+
+    <img src="~/images/Minimalist_app_logo.png" alt="fitness image" width="100" height="100"
+         onclick="document.getElementById('mainImg').src ='/images/Minimalist_app_logo.png'" />
+
+    <img src="~/images/alt-logo.png" alt="fitness image" width="100" height="100"
+         onclick="document.getElementById('mainImg').src ='/images/alt-logo.png'" />
+
+    <p><a href="#top">Back to the top</a></p>
+</div>
+
+@section Scripts {
+    <script>
+        function updateLink() {
+            const link = document.getElementById("dynamicLink");
+            const selectedValue = document.getElementById("siteSelect").value;
+            const image = document.getElementById("dynamicImage");
+
+            if (selectedValue === "Back") {
+                link.href = "https://www.youtube.com/watch?v=jLvqKgW-_G8";
+                link.textContent = "Video for Back Exercises";
+                image.src = "/images/Backmuscle.png";
+                image.alt = "back muscle";
+            } else if (selectedValue === "Chest") {
+                link.href = "https://www.youtube.com/watch?v=fGm-ef-4PVk";
+                link.textContent = "Video for Chest Exercises";
+                image.src = "/images/Chestmuscle.png";
+                image.alt = "chest muscle";
+            } else if (selectedValue === "Leg") {
+                link.href = "https://www.youtube.com/watch?v=8zWDuWKdBZU";
+                link.textContent = "Video for Leg Exercises";
+                image.src = "/images/Legmuscle.png";
+                image.alt = "leg muscle";
+            }
+        }
+    </script>
+}
