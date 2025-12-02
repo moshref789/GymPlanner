@@ -7,7 +7,7 @@ function activateLightMode() {
 
 function activateDarkMode() {
     document.body.style.color = "white";
-    document.body.style.background = "black";
+    document.body.style.background = "#1e1e1e";
     document.body.className = "dark-mode";
 
 }

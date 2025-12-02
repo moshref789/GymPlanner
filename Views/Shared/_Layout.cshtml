@@ -10,7 +10,7 @@
         Bootstrap + ستايل المشروع الأساسي -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/FavBookWebApp.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/GymPlanner.styles.css" asp-append-version="true" />
 
 
     <!-- ستايل مشروع الجيم -->
@@ -64,14 +64,12 @@
         </main>
     </div>
 
-    <footer class="gym-footer">
-        <div class="footer-container">
-            <p>© 2025 Gym Planner Project — All rights reserved</p>
-            <p>
-                <a asp-controller="Home" asp-action="About">About Us</a> |
-                <a asp-controller="Home" asp-action="Privacy">Privacy</a> |
-                <a asp-controller="Programs" asp-action="Index">Programs</a>
-            </p>
+    <footer class="border-top footer text-muted mt-auto">
+        <div class="container">
+            &copy; 2025 - Gym Planner Project — 
+            <a asp-controller="Home" asp-action="About">About Us</a> |
+            <a asp-controller="Home" asp-action="Privacy">Privacy</a> |
+            <a asp-controller="Programs" asp-action="Index">Programs</a>
         </div>
     </footer>
 
