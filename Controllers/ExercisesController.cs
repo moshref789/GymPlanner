@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GymPlanner.Data;
 using GymPlanner.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GymPlanner.Controllers
 {
@@ -56,6 +57,7 @@ namespace GymPlanner.Controllers
         }
 
         // GET: Exercises/Create
+        [Authorize]
         public IActionResult Create(int? workoutDayId)
         {
             ViewData["WorkoutDayId"] =
@@ -70,6 +72,7 @@ namespace GymPlanner.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Create([Bind("Id,Name,Weight,Sets,Reps,WorkoutDayId")] Exercise exercise)
         {
             if (ModelState.IsValid)
@@ -83,6 +86,7 @@ namespace GymPlanner.Controllers
         }
 
         // GET: Exercises/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -104,6 +108,7 @@ namespace GymPlanner.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Weight,Sets,Reps,WorkoutDayId")] Exercise exercise)
         {
             if (id != exercise.Id)
@@ -136,6 +141,7 @@ namespace GymPlanner.Controllers
         }
 
         // GET: Exercises/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -157,6 +163,7 @@ namespace GymPlanner.Controllers
         // POST: Exercises/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var exercise = await _context.Exercises.FindAsync(id);

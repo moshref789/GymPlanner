@@ -5,6 +5,7 @@ using GymPlanner.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GymPlanner.Controllers
 {
@@ -49,6 +50,7 @@ namespace GymPlanner.Controllers
         }
 
         // GET: WorkoutDays/Create
+        [Authorize]
         public IActionResult Create(int? programId)
         {
             ViewData["TrainingProgramId"] =
@@ -62,6 +64,7 @@ namespace GymPlanner.Controllers
         // POST: WorkoutDays/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Create(WorkoutDay workoutDay)
         {
             if (!ModelState.IsValid)
@@ -79,6 +82,7 @@ namespace GymPlanner.Controllers
 
 
         // GET: WorkoutDays/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -97,6 +101,7 @@ namespace GymPlanner.Controllers
         // POST: WorkoutDays/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Edit(
             int id,
             [Bind("Id,DayName,TrainingProgramId")] WorkoutDay workoutDay)
@@ -128,6 +133,7 @@ namespace GymPlanner.Controllers
         }
 
         // GET: WorkoutDays/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -145,6 +151,7 @@ namespace GymPlanner.Controllers
         // POST: WorkoutDays/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var day = await _context.WorkoutDays.FindAsync(id);
