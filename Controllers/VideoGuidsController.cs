@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GymPlanner.Data;
 using GymPlanner.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GymPlanner.Controllers
 {
@@ -44,6 +45,7 @@ namespace GymPlanner.Controllers
         }
 
         // GET: VideoGuids/Create
+        [Authorize]
         public IActionResult Create()
         {
             return View();
@@ -54,6 +56,7 @@ namespace GymPlanner.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Create([Bind("id,Muscle,Description,VideoUrl")] VideoGuid videoGuid)
         {
             if (ModelState.IsValid)
@@ -66,6 +69,7 @@ namespace GymPlanner.Controllers
         }
 
         // GET: VideoGuids/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -86,6 +90,7 @@ namespace GymPlanner.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Edit(int id, [Bind("id,Muscle,Description,VideoUrl")] VideoGuid videoGuid)
         {
             if (id != videoGuid.id)
@@ -117,6 +122,7 @@ namespace GymPlanner.Controllers
         }
 
         // GET: VideoGuids/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -137,6 +143,7 @@ namespace GymPlanner.Controllers
         // POST: VideoGuids/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var videoGuid = await _context.VideoGuid.FindAsync(id);
