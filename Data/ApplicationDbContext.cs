@@ -14,4 +14,6 @@ public class ApplicationDbContext : IdentityDbContext
     public DbSet<TrainingProgram> TrainingPrograms { get; set; }
     public DbSet<WorkoutDay> WorkoutDays { get; set; }
     public DbSet<Exercise> Exercises { get; set; }
+
+public DbSet<GymPlanner.Models.VideoGuid> VideoGuid { get; set; } = default!;
 }
