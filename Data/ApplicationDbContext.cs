@@ -1,9 +1,17 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using GymPlanner.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace GymPlanner.Data
+namespace GymPlanner.Data;
+
+public class ApplicationDbContext : IdentityDbContext
 {
-    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext(options)
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        : base(options)
     {
     }
+
+    public DbSet<TrainingProgram> TrainingPrograms { get; set; }
+    public DbSet<WorkoutDay> WorkoutDays { get; set; }
+    public DbSet<Exercise> Exercises { get; set; }
 }

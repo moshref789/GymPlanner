@@ -33,7 +33,7 @@
 
                 <!-- الروابط الرئيسية -->
                 <li><a class="shadow-box" asp-controller="Home" asp-action="Index">Home</a></li>
-                <li><a class="shadow-box" asp-controller="Programs" asp-action="Index">My Programs</a></li>
+                <li><a class="shadow-box" asp-controller="TrainingPrograms" asp-action="Index">My Programs</a></li>
                 <li><a class="shadow-box" asp-controller="Trainer" asp-action="Index">Trainer</a></li>
                 <li><a class="shadow-box" asp-controller="Home" asp-action="Privacy">Privacy</a></li>
                 <li><a class="shadow-box" asp-controller="Home" asp-action="About">About Us</a></li>
@@ -62,6 +62,12 @@
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
+    </div>
+
+    <div class="container mt-3">
+        <button onclick="history.back()" class="btn btn-outline-secondary">
+            ⬅ Back
+        </button>
     </div>
 
     <footer class="border-top footer text-muted mt-auto">

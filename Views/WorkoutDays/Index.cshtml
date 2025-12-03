@@ -1,0 +1,55 @@
+﻿@model IEnumerable<GymPlanner.Models.WorkoutDay>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    @if (ViewBag.ProgramId != null)
+    {
+        <a asp-action="Create" asp-route-programId="@ViewBag.ProgramId">Create Day</a>
+    }
+    else
+    {
+        <a asp-action="Create">Create Day</a>
+    }
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.DayName)
+            </th>
+            <th>
+                
+                
+                @Html.DisplayNameFor(model => model.TrainingProgram.Title)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DayName)
+                </td>
+                <td>
+                    @item.TrainingProgram?.Title
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
+                    <a asp-controller="Exercises" asp-action="Index"
+                       asp-route-workoutDayId="@item.Id">View Exercises</a>
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>
