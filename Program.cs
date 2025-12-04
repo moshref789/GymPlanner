@@ -20,6 +20,15 @@ namespace GymPlanner
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
 
+            builder.Services.AddDistributedMemoryCache();
+            builder.Services.AddSession(options => {
+                options.IdleTimeout =
+               TimeSpan.FromSeconds(300); // 5 mins
+                options.Cookie.IsEssential = true;
+                options.Cookie.SameSite =
+               SameSiteMode.Strict;
+            });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -38,6 +47,8 @@ namespace GymPlanner
             app.UseRouting();
 
             app.UseAuthorization();
+            app.UseAuthentication();
+            app.UseSession();
 
             app.MapStaticAssets();
             app.MapControllerRoute(
