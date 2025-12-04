@@ -19,6 +19,13 @@ namespace GymPlanner.Controllers
         {
             _context = context;
         }
+        // GET: TrainingPrograms/Trainer
+        // GET: TrainingPrograms/SearchForm
+        public IActionResult SearchForm()
+        {
+            return View();
+        }
+
 
         // GET: TrainingPrograms
         public async Task<IActionResult> Index()
@@ -49,7 +56,25 @@ namespace GymPlanner.Controllers
         public IActionResult Create()
         {
             return View();
+            
         }
+        // POST: TrainingPrograms/ShowSearchFormResult
+        [HttpPost]
+        public async Task<IActionResult> ShowSearchFormResult(string SearchProgram)
+        {
+            if (_context.TrainingPrograms == null)
+            {
+                return Problem("Entity set 'ApplicationDbContext.TrainingPrograms' is null.");
+            }
+
+            var result = await _context.TrainingPrograms
+                .Where(p => p.Title.Contains(SearchProgram))
+                .ToListAsync();
+
+            // نرجع View Index مع النتائج
+            return View("Index", result);
+        }
+
 
         // POST: TrainingPrograms/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
