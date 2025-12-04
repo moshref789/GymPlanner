@@ -48,7 +48,6 @@
                     </ul>
                 </nav>
 
-                <!-- روابط الدخول والتسجيل -->
                 <li class="right-nav">
                     <a class="log-sign" asp-area="Identity" asp-page="/Account/Login">login</a>
                 </li>
@@ -65,12 +64,6 @@
         </main>
     </div>
 
-    <div class="container mt-3">
-        <button onclick="history.back()" class="btn btn-outline-secondary">
-            ⬅ Back
-        </button>
-    </div>
-
     <footer class="border-top footer text-muted mt-auto">
         <div class="container">
             &copy; 2025 - Gym Planner Project —
@@ -81,15 +74,12 @@
     </footer>
 
 
-    <!-- سكربتات الأساس -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
 
-    <!-- سكربت ثيم مشروعك (نفس اللي كنت حاطه في home.html) -->
     <script src="~/js/theme.js"></script>
     <script>
-        // عشان تعوض body onload="traditional()"
         window.addEventListener("load", function () {
             if (typeof traditional === "function") {
                 traditional();
