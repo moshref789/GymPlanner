@@ -19,7 +19,6 @@ namespace GymPlanner.Controllers
         }
 
         // GET: WorkoutDays?programId=1
-        // يعرض أيام برنامج واحد
         public async Task<IActionResult> Index(int? programId)
         {
             if (programId == null)
@@ -53,6 +52,9 @@ namespace GymPlanner.Controllers
                 return NotFound();
             }
 
+            ViewBag.ProgramId = day.TrainingProgramId;
+
+
             return View(day);
         }
 
@@ -65,10 +67,8 @@ namespace GymPlanner.Controllers
                 return NotFound();
             }
 
-            // نخزن البرنامج عشان نرجع له بعد الحفظ
             ViewBag.ProgramId = programId.Value;
 
-            // DropDown للبرنامج (بس برنامج واحد محدد)
             ViewData["TrainingProgramId"] =
                 new SelectList(_context.TrainingPrograms, "Id", "Title", programId.Value);
 
@@ -94,7 +94,6 @@ namespace GymPlanner.Controllers
             _context.WorkoutDays.Add(workoutDay);
             await _context.SaveChangesAsync();
 
-            // نرجع لنفس البرنامج
             return RedirectToAction("Index", new { programId = workoutDay.TrainingProgramId });
         }
 
@@ -145,7 +144,6 @@ namespace GymPlanner.Controllers
             _context.Update(workoutDay);
             await _context.SaveChangesAsync();
 
-            // نرجع لنفس البرنامج
             return RedirectToAction("Index", new { programId = workoutDay.TrainingProgramId });
         }
 

@@ -31,7 +31,10 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <p>
+        <a asp-controller="WorkoutDays" asp-action="Index"
+           asp-route-programId="@ViewBag.ProgramId">Back to Days</a>
+    </p>
 </div>
 
 @section Scripts {

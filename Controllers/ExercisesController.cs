@@ -61,12 +61,20 @@ namespace GymPlanner.Controllers
                 return NotFound();
             }
 
+            ViewBag.WorkoutDayId = exercise.WorkoutDayId;
+
+            if (exercise.WorkoutDay != null)
+            {
+                ViewBag.ProgramId = exercise.WorkoutDay.TrainingProgramId;
+            }
+
+
             return View(exercise);
         }
 
         // GET: Exercises/Create?workoutDayId=5
         [Authorize]
-        public IActionResult Create(int? workoutDayId)
+        public async Task<IActionResult> Create(int? workoutDayId)
         {
             if (workoutDayId == null)
             {
@@ -75,7 +83,16 @@ namespace GymPlanner.Controllers
 
             ViewBag.WorkoutDayId = workoutDayId.Value;
 
-            ViewData["WorkoutDayId"] =
+            // Get the WorkoutDay to find its ProgramId
+            var workoutDay = await _context.WorkoutDays
+                .FirstOrDefaultAsync(d => d.Id == workoutDayId.Value);
+
+            if (workoutDay != null)
+            {
+                ViewBag.ProgramId = workoutDay.TrainingProgramId;
+            }
+
+            ViewData["WorkoutDayDropdown"] =
                 new SelectList(_context.WorkoutDays, "Id", "DayName", workoutDayId.Value);
 
             return View();
@@ -91,7 +108,16 @@ namespace GymPlanner.Controllers
             {
                 ViewBag.WorkoutDayId = exercise.WorkoutDayId;
 
-                ViewData["WorkoutDayId"] =
+                // Get ProgramId for the "Back" link
+                var workoutDay = await _context.WorkoutDays
+                    .FirstOrDefaultAsync(d => d.Id == exercise.WorkoutDayId);
+
+                if (workoutDay != null)
+                {
+                    ViewBag.ProgramId = workoutDay.TrainingProgramId;
+                }
+
+                ViewData["WorkoutDayDropdown"] =
                     new SelectList(_context.WorkoutDays, "Id", "DayName", exercise.WorkoutDayId);
 
                 return View(exercise);
@@ -112,7 +138,10 @@ namespace GymPlanner.Controllers
                 return NotFound();
             }
 
-            var exercise = await _context.Exercises.FindAsync(id);
+            var exercise = await _context.Exercises
+                .Include(e => e.WorkoutDay)  // Include to get ProgramId
+                .FirstOrDefaultAsync(e => e.Id == id);
+
             if (exercise == null)
             {
                 return NotFound();
@@ -120,7 +149,12 @@ namespace GymPlanner.Controllers
 
             ViewBag.WorkoutDayId = exercise.WorkoutDayId;
 
-            ViewData["WorkoutDayId"] =
+            if (exercise.WorkoutDay != null)
+            {
+                ViewBag.ProgramId = exercise.WorkoutDay.TrainingProgramId;
+            }
+
+            ViewData["WorkoutDayDropdown"] =
                 new SelectList(_context.WorkoutDays, "Id", "DayName", exercise.WorkoutDayId);
 
             return View(exercise);
@@ -141,7 +175,16 @@ namespace GymPlanner.Controllers
             {
                 ViewBag.WorkoutDayId = exercise.WorkoutDayId;
 
-                ViewData["WorkoutDayId"] =
+                // Get ProgramId for the "Back" link
+                var workoutDay = await _context.WorkoutDays
+                    .FirstOrDefaultAsync(d => d.Id == exercise.WorkoutDayId);
+
+                if (workoutDay != null)
+                {
+                    ViewBag.ProgramId = workoutDay.TrainingProgramId;
+                }
+
+                ViewData["WorkoutDayDropdown"] =
                     new SelectList(_context.WorkoutDays, "Id", "DayName", exercise.WorkoutDayId);
 
                 return View(exercise);
@@ -172,6 +215,11 @@ namespace GymPlanner.Controllers
             }
 
             ViewBag.WorkoutDayId = exercise.WorkoutDayId;
+
+            if (exercise.WorkoutDay != null)
+            {
+                ViewBag.ProgramId = exercise.WorkoutDay.TrainingProgramId;
+            }
 
             return View(exercise);
         }
