@@ -10,7 +10,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form id="createExerciseForm" asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
@@ -49,4 +49,19 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        document.getElementById("createExerciseForm").onsubmit = e => {
+            const weight = parseInt(document.getElementById("Weight").value);
+            const sets = parseFloat(document.getElementById("Sets").value);
+            const reps = parseInt(document.getElementById("Reps").value);
+            if ((isNaN(sets) || sets <= 0 || sets > 30) ||
+                (isNaN(weight) || weight <= 0 || weight > 500) ||
+                (isNaN(reps) || reps <= 0 || reps > 5)) {
+
+                alert("Please enter valid sets (1-30), weight (0-500), and reps (1-5)");
+                e.preventDefault();
+            }
+
+         };
+     </script>
 }
