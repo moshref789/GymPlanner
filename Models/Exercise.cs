@@ -1,14 +1,26 @@
-﻿namespace GymPlanner.Models;
+﻿using System.ComponentModel.DataAnnotations;
 
-public class Exercise
+namespace GymPlanner.Models
 {
-    public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
+    public class Exercise
+    {
+        public int Id { get; set; }
 
-    public double Weight { get; set; }
-    public int Sets { get; set; }
-    public int Reps { get; set; }
+        [Required]
+        public string Name { get; set; }
 
-    public int WorkoutDayId { get; set; }
-    public WorkoutDay? WorkoutDay { get; set; }
+        public double Weight { get; set; }
+
+        [Required]
+        public int Sets { get; set; }
+
+        [Required]
+        public int Reps { get; set; }
+
+        // Foreign Key
+        public int WorkoutDayId { get; set; }
+
+        // Navigation Property - Make it nullable
+        public WorkoutDay? WorkoutDay { get; set; }
+    }
 }

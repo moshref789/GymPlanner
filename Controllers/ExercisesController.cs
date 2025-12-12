@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
+using GymPlanner.Data;
+using GymPlanner.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using GymPlanner.Data;
-using GymPlanner.Models;
 using Microsoft.AspNetCore.Authorization;
 
 namespace GymPlanner.Controllers
@@ -20,22 +18,31 @@ namespace GymPlanner.Controllers
             _context = context;
         }
 
-        // GET: Exercises
+        // GET: Exercises?workoutDayId=5
         public async Task<IActionResult> Index(int? workoutDayId)
         {
-            IQueryable<Exercise> query = _context.Exercises
-                                                 .Include(e => e.WorkoutDay);
-
-            if (workoutDayId.HasValue)
+            if (workoutDayId == null)
             {
-                query = query.Where(e => e.WorkoutDayId == workoutDayId.Value);
-                ViewBag.WorkoutDayId = workoutDayId.Value;
+                return NotFound();
             }
 
-            return View(await query.ToListAsync());
+            ViewBag.WorkoutDayId = workoutDayId.Value;
+
+            // Get the WorkoutDay to find its ProgramId
+            var workoutDay = await _context.WorkoutDays
+                .FirstOrDefaultAsync(d => d.Id == workoutDayId.Value);
+
+            if (workoutDay != null)
+            {
+                ViewBag.ProgramId = workoutDay.TrainingProgramId;
+            }
+
+            var exercises = await _context.Exercises
+                .Where(e => e.WorkoutDayId == workoutDayId.Value)
+                .ToListAsync();
+
+            return View(exercises);
         }
-
-
 
         // GET: Exercises/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -48,6 +55,7 @@ namespace GymPlanner.Controllers
             var exercise = await _context.Exercises
                 .Include(e => e.WorkoutDay)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (exercise == null)
             {
                 return NotFound();
@@ -56,33 +64,43 @@ namespace GymPlanner.Controllers
             return View(exercise);
         }
 
-        // GET: Exercises/Create
+        // GET: Exercises/Create?workoutDayId=5
         [Authorize]
         public IActionResult Create(int? workoutDayId)
         {
+            if (workoutDayId == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.WorkoutDayId = workoutDayId.Value;
+
             ViewData["WorkoutDayId"] =
-                new SelectList(_context.WorkoutDays, "Id", "DayName", workoutDayId);
+                new SelectList(_context.WorkoutDays, "Id", "DayName", workoutDayId.Value);
 
             return View();
         }
 
-
         // POST: Exercises/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> Create([Bind("Id,Name,Weight,Sets,Reps,WorkoutDayId")] Exercise exercise)
+        public async Task<IActionResult> Create(Exercise exercise)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                _context.Add(exercise);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                ViewBag.WorkoutDayId = exercise.WorkoutDayId;
+
+                ViewData["WorkoutDayId"] =
+                    new SelectList(_context.WorkoutDays, "Id", "DayName", exercise.WorkoutDayId);
+
+                return View(exercise);
             }
-            ViewData["WorkoutDayId"] = new SelectList(_context.WorkoutDays, "Id", "Id", exercise.WorkoutDayId);
-            return View(exercise);
+
+            _context.Exercises.Add(exercise);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index", new { workoutDayId = exercise.WorkoutDayId });
         }
 
         // GET: Exercises/Edit/5
@@ -99,45 +117,40 @@ namespace GymPlanner.Controllers
             {
                 return NotFound();
             }
-            ViewData["WorkoutDayId"] = new SelectList(_context.WorkoutDays, "Id", "Id", exercise.WorkoutDayId);
+
+            ViewBag.WorkoutDayId = exercise.WorkoutDayId;
+
+            ViewData["WorkoutDayId"] =
+                new SelectList(_context.WorkoutDays, "Id", "DayName", exercise.WorkoutDayId);
+
             return View(exercise);
         }
 
         // POST: Exercises/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Weight,Sets,Reps,WorkoutDayId")] Exercise exercise)
+        public async Task<IActionResult> Edit(int id, Exercise exercise)
         {
             if (id != exercise.Id)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(exercise);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ExerciseExists(exercise.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                ViewBag.WorkoutDayId = exercise.WorkoutDayId;
+
+                ViewData["WorkoutDayId"] =
+                    new SelectList(_context.WorkoutDays, "Id", "DayName", exercise.WorkoutDayId);
+
+                return View(exercise);
             }
-            ViewData["WorkoutDayId"] = new SelectList(_context.WorkoutDays, "Id", "Id", exercise.WorkoutDayId);
-            return View(exercise);
+
+            _context.Update(exercise);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index", new { workoutDayId = exercise.WorkoutDayId });
         }
 
         // GET: Exercises/Delete/5
@@ -152,10 +165,13 @@ namespace GymPlanner.Controllers
             var exercise = await _context.Exercises
                 .Include(e => e.WorkoutDay)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (exercise == null)
             {
                 return NotFound();
             }
+
+            ViewBag.WorkoutDayId = exercise.WorkoutDayId;
 
             return View(exercise);
         }
@@ -167,18 +183,18 @@ namespace GymPlanner.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var exercise = await _context.Exercises.FindAsync(id);
+
             if (exercise != null)
             {
+                int workoutDayId = exercise.WorkoutDayId;
+
                 _context.Exercises.Remove(exercise);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction("Index", new { workoutDayId = workoutDayId });
             }
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool ExerciseExists(int id)
-        {
-            return _context.Exercises.Any(e => e.Id == id);
+            return NotFound();
         }
     }
 }

@@ -18,49 +18,63 @@ namespace GymPlanner.Controllers
             _context = context;
         }
 
-        // GET: WorkoutDays
+        // GET: WorkoutDays?programId=1
+        // يعرض أيام برنامج واحد
         public async Task<IActionResult> Index(int? programId)
         {
-            IQueryable<WorkoutDay> query = _context.WorkoutDays
-                                                   .Include(d => d.TrainingProgram);
-
-            if (programId.HasValue)
+            if (programId == null)
             {
-                query = query.Where(d => d.TrainingProgramId == programId.Value);
-                ViewBag.ProgramId = programId.Value;
+                return NotFound();
             }
 
-            return View(await query.ToListAsync());
-        }
+            ViewBag.ProgramId = programId.Value;
 
+            var days = await _context.WorkoutDays
+                .Where(d => d.TrainingProgramId == programId.Value)
+                .ToListAsync();
+
+            return View(days);
+        }
 
         // GET: WorkoutDays/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
+            {
                 return NotFound();
+            }
 
             var day = await _context.WorkoutDays
-                                    .Include(d => d.TrainingProgram)
-                                    .FirstOrDefaultAsync(m => m.Id == id);
+                .Include(d => d.TrainingProgram)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
             if (day == null)
+            {
                 return NotFound();
+            }
 
             return View(day);
         }
 
-        // GET: WorkoutDays/Create
+        // GET: WorkoutDays/Create?programId=1
         [Authorize]
         public IActionResult Create(int? programId)
         {
+            if (programId == null)
+            {
+                return NotFound();
+            }
+
+            // نخزن البرنامج عشان نرجع له بعد الحفظ
+            ViewBag.ProgramId = programId.Value;
+
+            // DropDown للبرنامج (بس برنامج واحد محدد)
             ViewData["TrainingProgramId"] =
-                new SelectList(_context.TrainingPrograms, "Id", "Title", programId);
+                new SelectList(_context.TrainingPrograms, "Id", "Title", programId.Value);
 
             return View();
         }
 
-
-        // POST: WorkoutDays/Create
         // POST: WorkoutDays/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -69,6 +83,8 @@ namespace GymPlanner.Controllers
         {
             if (!ModelState.IsValid)
             {
+                ViewBag.ProgramId = workoutDay.TrainingProgramId;
+
                 ViewData["TrainingProgramId"] =
                     new SelectList(_context.TrainingPrograms, "Id", "Title", workoutDay.TrainingProgramId);
 
@@ -77,20 +93,27 @@ namespace GymPlanner.Controllers
 
             _context.WorkoutDays.Add(workoutDay);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
 
+            // نرجع لنفس البرنامج
+            return RedirectToAction("Index", new { programId = workoutDay.TrainingProgramId });
+        }
 
         // GET: WorkoutDays/Edit/5
         [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
+            {
                 return NotFound();
+            }
 
             var day = await _context.WorkoutDays.FindAsync(id);
             if (day == null)
+            {
                 return NotFound();
+            }
+
+            ViewBag.ProgramId = day.TrainingProgramId;
 
             ViewData["TrainingProgramId"] =
                 new SelectList(_context.TrainingPrograms, "Id", "Title", day.TrainingProgramId);
@@ -102,34 +125,28 @@ namespace GymPlanner.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> Edit(
-            int id,
-            [Bind("Id,DayName,TrainingProgramId")] WorkoutDay workoutDay)
+        public async Task<IActionResult> Edit(int id, WorkoutDay workoutDay)
         {
             if (id != workoutDay.Id)
-                return NotFound();
-
-            if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(workoutDay);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!_context.WorkoutDays.Any(e => e.Id == workoutDay.Id))
-                        return NotFound();
-                    else
-                        throw;
-                }
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
 
-            ViewData["TrainingProgramId"] =
-                new SelectList(_context.TrainingPrograms, "Id", "Title", workoutDay.TrainingProgramId);
+            if (!ModelState.IsValid)
+            {
+                ViewBag.ProgramId = workoutDay.TrainingProgramId;
 
-            return View(workoutDay);
+                ViewData["TrainingProgramId"] =
+                    new SelectList(_context.TrainingPrograms, "Id", "Title", workoutDay.TrainingProgramId);
+
+                return View(workoutDay);
+            }
+
+            _context.Update(workoutDay);
+            await _context.SaveChangesAsync();
+
+            // نرجع لنفس البرنامج
+            return RedirectToAction("Index", new { programId = workoutDay.TrainingProgramId });
         }
 
         // GET: WorkoutDays/Delete/5
@@ -137,13 +154,21 @@ namespace GymPlanner.Controllers
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
+            {
                 return NotFound();
+            }
 
             var day = await _context.WorkoutDays
-                                    .Include(d => d.TrainingProgram)
-                                    .FirstOrDefaultAsync(m => m.Id == id);
+                .Include(d => d.TrainingProgram)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
             if (day == null)
+            {
                 return NotFound();
+            }
+
+            // نخزن البرنامج عشان نرجع له بعد الحذف
+            ViewBag.ProgramId = day.TrainingProgramId;
 
             return View(day);
         }
@@ -155,11 +180,19 @@ namespace GymPlanner.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var day = await _context.WorkoutDays.FindAsync(id);
-            if (day != null)
-                _context.WorkoutDays.Remove(day);
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            if (day != null)
+            {
+                int programId = day.TrainingProgramId;
+
+                _context.WorkoutDays.Remove(day);
+                await _context.SaveChangesAsync();
+
+                // نرجع لنفس البرنامج
+                return RedirectToAction("Index", new { programId = programId });
+            }
+
+            return NotFound();
         }
     }
 }

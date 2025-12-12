@@ -1,12 +1,18 @@
-﻿namespace GymPlanner.Models;
-
-public class WorkoutDay
+﻿using System.ComponentModel.DataAnnotations;
+namespace GymPlanner.Models
 {
-    public int Id { get; set; }
-    public string DayName { get; set; } = string.Empty;
+    public class WorkoutDay
+    {
+        public int Id { get; set; }
 
-    public int TrainingProgramId { get; set; }
-    public TrainingProgram? TrainingProgram { get; set; }
+        [Required]
+        public string DayName { get; set; }
 
-    public ICollection<Exercise> Exercises { get; set; } = new List<Exercise>();
+        // Foreign Key
+        public int TrainingProgramId { get; set; }
+
+        public TrainingProgram? TrainingProgram { get; set; }
+
+        public ICollection<Exercise>? Exercises { get; set; }
+    }
 }

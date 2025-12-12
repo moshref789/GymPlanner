@@ -1,33 +1,19 @@
 ﻿@model IEnumerable<GymPlanner.Models.WorkoutDay>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Days";
 }
 
-<h1>Index</h1>
+<h1>Days</h1>
 
 <p>
-    @if (ViewBag.ProgramId != null)
-    {
-        <a asp-action="Create" asp-route-programId="@ViewBag.ProgramId">Create Day</a>
-    }
-    else
-    {
-        <a asp-action="Create">Create Day</a>
-    }
+    <a asp-action="Create" asp-route-programId="@ViewBag.ProgramId">Create Day</a>
 </p>
 
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.DayName)
-            </th>
-            <th>
-                
-                
-                @Html.DisplayNameFor(model => model.TrainingProgram.Title)
-            </th>
+            <th>Day Name</th>
             <th></th>
         </tr>
     </thead>
@@ -35,26 +21,21 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DayName)
-                </td>
-                <td>
-                    @item.TrainingProgram?.Title
-                </td>
+                <td>@item.DayName</td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                     <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                     <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
                     <a asp-controller="Exercises" asp-action="Index"
-                       asp-route-workoutDayId="@item.Id">View Exercises</a>
+                       asp-route-workoutDayId="@item.Id">
+                        View Exercises
+                    </a>
                 </td>
-
             </tr>
         }
     </tbody>
 </table>
-<div class="container mt-3">
-        <button onclick="history.back()" class="btn btn-outline-secondary">
-            ⬅ Back
-        </button>
-    </div>
+
+<p>
+    <a asp-controller="TrainingPrograms" asp-action="Index">Back to Programs</a>
+</p>

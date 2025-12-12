@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GymPlanner.Data;
 using GymPlanner.Models;
@@ -19,21 +16,33 @@ namespace GymPlanner.Controllers
         {
             _context = context;
         }
-        // GET: TrainingPrograms/Trainer
+
+        // Index
+        public async Task<IActionResult> Index()
+        {
+            return View(await _context.TrainingPrograms.ToListAsync());
+        }
+
+        // Search
         // GET: TrainingPrograms/SearchForm
         public IActionResult SearchForm()
         {
             return View();
         }
 
-
-        // GET: TrainingPrograms
-        public async Task<IActionResult> Index()
+        // POST: TrainingPrograms/ShowSearchFormResult
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ShowSearchFormResult(string SearchProgram)
         {
-            return View(await _context.TrainingPrograms.ToListAsync());
+            var result = await _context.TrainingPrograms
+                .Where(p => p.Title.Contains(SearchProgram))
+                .ToListAsync();
+
+            return View("Index", result);
         }
 
-        // GET: TrainingPrograms/Details/5
+        // Details
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -43,6 +52,7 @@ namespace GymPlanner.Controllers
 
             var trainingProgram = await _context.TrainingPrograms
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (trainingProgram == null)
             {
                 return NotFound();
@@ -51,38 +61,17 @@ namespace GymPlanner.Controllers
             return View(trainingProgram);
         }
 
-        // GET: TrainingPrograms/Create
+        // Create
         [Authorize]
         public IActionResult Create()
         {
             return View();
-            
-        }
-        // POST: TrainingPrograms/ShowSearchFormResult
-        [HttpPost]
-        public async Task<IActionResult> ShowSearchFormResult(string SearchProgram)
-        {
-            if (_context.TrainingPrograms == null)
-            {
-                return Problem("Entity set 'ApplicationDbContext.TrainingPrograms' is null.");
-            }
-
-            var result = await _context.TrainingPrograms
-                .Where(p => p.Title.Contains(SearchProgram))
-                .ToListAsync();
-
-            // نرجع View Index مع النتائج
-            return View("Index", result);
         }
 
-
-        // POST: TrainingPrograms/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> Create([Bind("Id,Title,Description")] TrainingProgram trainingProgram)
+        public async Task<IActionResult> Create(TrainingProgram trainingProgram)
         {
             if (ModelState.IsValid)
             {
@@ -90,10 +79,11 @@ namespace GymPlanner.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             return View(trainingProgram);
         }
 
-        // GET: TrainingPrograms/Edit/5
+        // Edit
         [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -107,16 +97,14 @@ namespace GymPlanner.Controllers
             {
                 return NotFound();
             }
+
             return View(trainingProgram);
         }
 
-        // POST: TrainingPrograms/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description")] TrainingProgram trainingProgram)
+        public async Task<IActionResult> Edit(int id, TrainingProgram trainingProgram)
         {
             if (id != trainingProgram.Id)
             {
@@ -125,28 +113,15 @@ namespace GymPlanner.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(trainingProgram);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!TrainingProgramExists(trainingProgram.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                _context.Update(trainingProgram);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             return View(trainingProgram);
         }
 
-        // GET: TrainingPrograms/Delete/5
+        // Delete
         [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
@@ -157,6 +132,7 @@ namespace GymPlanner.Controllers
 
             var trainingProgram = await _context.TrainingPrograms
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (trainingProgram == null)
             {
                 return NotFound();
@@ -165,7 +141,6 @@ namespace GymPlanner.Controllers
             return View(trainingProgram);
         }
 
-        // POST: TrainingPrograms/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize]
@@ -175,15 +150,10 @@ namespace GymPlanner.Controllers
             if (trainingProgram != null)
             {
                 _context.TrainingPrograms.Remove(trainingProgram);
+                await _context.SaveChangesAsync();
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool TrainingProgramExists(int id)
-        {
-            return _context.TrainingPrograms.Any(e => e.Id == id);
         }
     }
 }

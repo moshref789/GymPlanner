@@ -1,10 +1,17 @@
-﻿namespace GymPlanner.Models;
+﻿using System.ComponentModel.DataAnnotations;
 
-public class TrainingProgram
+namespace GymPlanner.Models
 {
-    public int Id { get; set; }
-    public string Title { get; set; } = string.Empty;
-    public string? Description { get; set; }
+    public class TrainingProgram
+    {
+        public int Id { get; set; }
 
-    public ICollection<WorkoutDay> Days { get; set; } = new List<WorkoutDay>();
+        [Required]
+        public string Title { get; set; }
+
+        public string Description { get; set; }
+
+        // علاقة One-to-Many
+        public ICollection<WorkoutDay> Days { get; set; } = new List<WorkoutDay>();
+    }
 }

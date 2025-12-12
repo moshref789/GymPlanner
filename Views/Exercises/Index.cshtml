@@ -1,72 +1,44 @@
 ﻿@model IEnumerable<GymPlanner.Models.Exercise>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Exercises";
 }
 
-<h1>Index</h1>
+<h1>Exercises</h1>
 
 <p>
-    @if (ViewBag.WorkoutDayId != null)
-    {
-        <a asp-action="Create" asp-route-workoutDayId="@ViewBag.WorkoutDayId">Create Exercise</a>
-    }
-    else
-    {
-        <a asp-action="Create">Create Exercise</a>
-    }
+    <a asp-action="Create" asp-route-workoutDayId="@ViewBag.WorkoutDayId">Create Exercise</a>
 </p>
 
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Weight)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Sets)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Reps)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.WorkoutDay)
-            </th>
+            <th>Name</th>
+            <th>Weight</th>
+            <th>Sets</th>
+            <th>Reps</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Weight)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Sets)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Reps)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.WorkoutDay.Id)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Weight</td>
+                <td>@item.Sets</td>
+                <td>@item.Reps</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
-<div class="container mt-3">
-        <button onclick="history.back()" class="btn btn-outline-secondary">
-            ⬅ Back
-        </button>
-    </div>
+
+<p>
+    <a asp-controller="WorkoutDays" asp-action="Index"
+       asp-route-programId="@ViewBag.ProgramId">Back to Days</a>
+</p>
