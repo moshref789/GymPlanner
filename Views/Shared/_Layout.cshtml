@@ -36,7 +36,7 @@
                 <li><a asp-controller="Home" asp-action="About">About Us</a></li>
                 <li><a asp-controller="Account" asp-action="Index">User Account</a></li>
 
-                <nav class="menu">
+                <li class="menu">
                     Search
                     <ul>
                         <li>
@@ -51,13 +51,10 @@
                         </li>
 
                     </ul>
-                </nav>
+                </li>
 
                 <li class="right-nav">
-                    <a class="log-sign" asp-area="Identity" asp-page="/Account/Login">login</a>
-                </li>
-                <li>
-                    <a class="log-sign" asp-area="Identity" asp-page="/Account/Register">register</a>
+                    <partial name="_LoginPartial" />
                 </li>
             </ul>
         </nav>
@@ -77,6 +74,9 @@
             <a asp-controller="Programs" asp-action="Index">Programs</a>
         </div>
     </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

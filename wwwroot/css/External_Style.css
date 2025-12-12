@@ -29,7 +29,8 @@ nav a {
     border-radius: 5px;
 }
 
-nav.menu ul {
+/* Dropdown menu */
+li.menu ul {
     display: none;
     position: absolute;
     list-style: none;
@@ -37,20 +38,27 @@ nav.menu ul {
     padding: 0;
 }
 
-nav.menu:hover ul {
+li.menu:hover ul {
     display: block;
 }
 
-nav.menu ul li a {
+li.menu ul li a {
     padding: 10px 15px;
     border: 1px solid black;
     background-color: aliceblue;
     display: block;
 }
 
-    nav.menu ul li a:hover {
+    li.menu ul li a:hover {
         background-color: lightblue;
     }
+
+.navbar-nav {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
 
 h1 {
     font-family: "Poppins", Arial, sans-serif;
