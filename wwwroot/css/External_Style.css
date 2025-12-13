@@ -29,6 +29,11 @@ nav a {
     border-radius: 5px;
 }
 
+.logout {
+    margin-right: 30px;
+    border:none;
+}
+
 /* Dropdown menu */
 li.menu ul {
     display: none;
