@@ -13,6 +13,7 @@ Users can enter their email and password to sign in using a local account.
 The page provides full login support to allow users complete access to the system’s features, such as managing workout programs and viewing exercise videos.
 There are also options to remember the user, reset the password, or register as a new user.
 
-https://github.com/user-attachments/assets/9a323542-7b0e-4784-85fd-995e0d4e7766
 
+https://github.com/user-attachments/assets/26b1f08a-ca30-4967-a959-15ac37bb1d56
 
+The website allows users to easily customize their workout schedule by selecting exercises and organizing the number of training days in a connected and simple way. This helps users create a personalized workout plan based on their fitness goals.
