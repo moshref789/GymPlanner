@@ -88,7 +88,7 @@ The goal of Gym Program Planner is to provide a simple and connected fitness pla
 
 ## Contributors
 
-- Your Name
+- Abdullah Alamri
 
 ## License
 
